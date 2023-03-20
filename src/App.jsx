@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+
 function App() {
   const title = "React";
   const welcome = {
@@ -18,7 +19,7 @@ function App() {
 
   return (
     <div>
-      <h1>{welcome.greeting} {getTitle(welcome.title)}</h1>
+      <h1>Hello World</h1>
       <ul>
         {myList.map(i => <li> {i} </li>)}
       </ul> 
