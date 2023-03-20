@@ -3,28 +3,50 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+const list = [
+  {
+    title: "React",
+    url: "https://reactjs.org",
+    author: "Jordan Walke",
+    num_comments: 3,
+    points: 4,
+    objectID: 0,
+  },
+  {
+    title: "Redux",
+    url: "https://redux.js.org/",
+    author: "Dan Abramov, Andrew Clark",
+    num_comments: 2,
+    points: 5,
+    objectID: 1,
+  },
+  {
+    title: "Java",
+    url: "www.oracle.com/java",
+    author: "James Gosling",
+    num_comments: 4,
+    points: 9,
+    objectID: 2,
+  },
+]
 
 function App() {
-  const title = "React";
-  const welcome = {
-    title: "React",
-    greeting: "Hey"
-  }
-
-  function getTitle(title){
-    return title;
-  }
-
-  const myList = [1,"8",2,3,4];
-
+  
   return (
     <div>
-      <h1>Hello World</h1>
-      <ul>
-        {myList.map(i => <li> {i} </li>)}
-      </ul> 
       <label htmlFor="search">Search</label>
       <input id="search" type="text" />
+      <hr />
+      <ul>
+        {list.map(i => <li key={i.objectID}> 
+                          <span>
+                            <a href={i.url}>{i.title}</a>
+                          </span>
+                          <span> {i.author}</span>  
+                          <span> {i.num_comments}</span>
+                          <span> {i.points}</span>
+                          </li>)}
+      </ul>
     </div>
   )
 }
