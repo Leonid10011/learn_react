@@ -31,13 +31,18 @@ const list = [
 ]
 
 function App() {
-  
   return (
     <div>
-      <label htmlFor="search">Search</label>
-      <input id="search" type="text" />
+      <Search />
       <hr />
-      <ul>
+      <List />
+    </div>
+  );
+}
+
+function List() {
+  return(
+    <ul>
         {list.map(i => <li key={i.objectID}> 
           <span>
             <a href={i.url}>{i.title}</a>
@@ -47,8 +52,16 @@ function App() {
           <span> {i.points}</span>
           </li>)}
       </ul>
+  );
+}
+
+function Search() {
+  return(
+    <div>
+      <label htmlFor="search">Search</label>
+      <input id="search" type="text" />
     </div>
-  )
+  );
 }
 
 export default App
