@@ -39,13 +39,13 @@ function App() {
       <hr />
       <ul>
         {list.map(i => <li key={i.objectID}> 
-                          <span>
-                            <a href={i.url}>{i.title}</a>
-                          </span>
-                          <span> {i.author}</span>  
-                          <span> {i.num_comments}</span>
-                          <span> {i.points}</span>
-                          </li>)}
+          <span>
+            <a href={i.url}>{i.title}</a>
+          </span>
+          <span> {i.author}</span>  
+          <span> {i.num_comments}</span>
+          <span> {i.points}</span>
+          </li>)}
       </ul>
     </div>
   )
