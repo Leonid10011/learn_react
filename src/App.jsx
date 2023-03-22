@@ -35,23 +35,17 @@ function App() {
     <div>
       <Search />
       <hr />
-      <List />
+      <List a={list}/>
     </div>
   );
 }
 
-function List() {
+function List({a}) {
   return(
     <ul>
-        {list.map(i => <li key={i.objectID}> 
-          <span>
-            <a href={i.url}>{i.title}</a>
-          </span>
-          <span> {i.author}</span>  
-          <span> {i.num_comments}</span>
-          <span> {i.points}</span>
-          </li>)}
-      </ul>
+      {a.map(i => <Element item={i}/>
+      )}
+    </ul>
   );
 }
 
@@ -64,4 +58,18 @@ function Search() {
   );
 }
 
+const Element = ({item}) => {
+  return (
+    <div>
+      <li key={item.objectID}> 
+      <span>
+        <a href={item.url}>{item.title}</a>
+      </span>
+      <span> {item.author}</span>  
+      <span> {item.num_comments}</span>
+      <span> {item.points}</span>
+      </li>
+    </div>
+  )
+}
 export default App

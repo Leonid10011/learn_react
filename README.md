@@ -4,3 +4,7 @@ I'm pushing all practical learn lessons actively to this repository while readin
 
 Important Lesson: #\n
 How Components work: https://www.robinwieruch.de/react-element-component/
+
+Rendering Elements: https://bit.ly/3aUySgP
+
+React strict mode: https://legacy.reactjs.org/docs/strict-mode.html
