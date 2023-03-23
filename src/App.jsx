@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
@@ -50,10 +51,13 @@ const List = ({a}) => {
 }
 
 const Search = () => {
-  const handleChange = event => {
-    console.log(event);
+  const [text, setText] = React.useState("");
 
-    console.log(event.target.value);
+  const handleChange = event => {
+    // A synthetic event
+    console.log(event);
+    setText(event.target.value);
+    console.log(text);
   };
 
   return(

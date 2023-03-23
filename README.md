@@ -8,3 +8,5 @@ How Components work: https://www.robinwieruch.de/react-element-component/
 Rendering Elements: https://bit.ly/3aUySgP
 
 React strict mode: https://legacy.reactjs.org/docs/strict-mode.html
+
+React event handler: https://www.robinwieruch.de/react-event-handler/
