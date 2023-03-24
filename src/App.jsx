@@ -4,48 +4,67 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
-const list = [
-  {
-    title: "React",
-    url: "https://reactjs.org",
-    author: "Jordan Walke",
-    num_comments: 3,
-    points: 4,
-    objectID: 0,
-  },
-  {
-    title: "Redux",
-    url: "https://redux.js.org/",
-    author: "Dan Abramov, Andrew Clark",
-    num_comments: 2,
-    points: 5,
-    objectID: 1,
-  },
-  {
-    title: "Java",
-    url: "www.oracle.com/java",
-    author: "James Gosling",
-    num_comments: 4,
-    points: 9,
-    objectID: 2,
-  },
-]
+const style = {
+  padding: "10px 30px",
+  border: "1px solid black",
+}
 
 const App = () => {
+  // Test Event Bubbeling
+  const handelOuterClick = () => {
+    alert("Outer Click");
+  }
+
+  const handleInnerClick = () => {
+    alert("Inner Click");
+  }
+
+  const stories = [
+    {
+      title: "React",
+      url: "https://reactjs.org",
+      author: "Jordan Walke",
+      num_comments: 3,
+      points: 4,
+      objectID: 0,
+    },
+    {
+      title: "Redux",
+      url: "https://redux.js.org/",
+      author: "Dan Abramov, Andrew Clark",
+      num_comments: 2,
+      points: 5,
+      objectID: 1,
+    },
+    {
+      title: "Java",
+      url: "www.oracle.com/java",
+      author: "James Gosling",
+      num_comments: 4,
+      points: 9,
+      objectID: 2,
+    },
+  ]
+
   return (
     <div>
+      <div style={style} onClick={handelOuterClick}>
+        <div style={style} onClick={handleInnerClick}>
+          CLick Me ( Test Bubbeling)
+        </div>
+      </div>
+
       <Search />
       <hr />
-      <List a={list}/>
+      <List a={stories}/>
     </div>
   );
 }
 
-const List = ({a}) => {
+const List = (props) => {
   return(
     <ul>
-      {a.map(i => <Element item={i}/>
-      )}
+      {props.a.map(i => <Element key={i.objectID} item={i}/>)}
     </ul>
   );
 }
@@ -68,18 +87,20 @@ const Search = () => {
   );
 }
 
-const Element = ({item}) => {
+const Element = (props) => {
   return (
     <div>
-      <li key={item.objectID}> 
+      <li key={props.item.objectID}> 
       <span>
-        <a href={item.url}>{item.title}</a>
+        <a href={props.item.url}>{props.item.title}</a>
       </span>
-      <span> {item.author}</span>  
-      <span> {item.num_comments}</span>
-      <span> {item.points}</span>
+      <span> {props.item.author}</span>  
+      <span> {props.item.num_comments}</span>
+      <span> {props.item.points}</span>
       </li>
     </div>
   )
 }
+
+
 export default App
