@@ -12,7 +12,7 @@ const style = {
 const App = () => {
   console.log("App");
 
-  const [searchTerm, setSearchterm] = React.useState("");
+  const [searchTerm, setSearchterm] = React.useState("React");
 
   const stories = [
     {
@@ -82,7 +82,7 @@ const Search = ({callbackFunction, text}) => {
   return(
     <div>
       <label htmlFor="search">Search</label>
-      <input id="search" type="text" onChange={handleChange} />
+      <input id="search" type="text" onChange={handleChange} value={text}/>
       <p>
         Searching for <strong>{text}</strong>.
       </p>
