@@ -11,14 +11,8 @@ const style = {
 
 const App = () => {
   console.log("App");
-  // Test Event Bubbeling
-  const handelOuterClick = () => {
-    alert("Outer Click");
-  }
 
-  const handleInnerClick = () => {
-    alert("Inner Click");
-  }
+  const [text, setText] = React.useState("");
 
   const stories = [
     {
@@ -49,29 +43,12 @@ const App = () => {
 
   return (
     <div>
-      <Welcome/>
-      <div style={style} onClick={handelOuterClick}>
-        <div style={style} onClick={handleInnerClick}>
-          CLick Me ( Test Bubbeling)
-        </div>
-      </div>
-
-      <Search />
+      <Search callbackFunction = {setText} text={text}/>
       <hr />
       <List a={stories}/>
     </div>
   );
 }
-
-const Welcome = ({ title }) => {
-  title = title || "Earth";
-  
-  return (
-    <div>
-      <Title title={`Welcome to ${title}`}/>
-    </div>
-  );
-};
 
 const Title = ({title}) => {
   return (
@@ -88,20 +65,22 @@ const List = (props) => {
   );
 }
 
-const Search = () => {
-  const [text, setText] = React.useState("");
-  console.log("Search");
+const Search = ({callbackFunction, text}) => {
+  
   const handleChange = event => {
     // A synthetic event
-    console.log(event);
-    setText(event.target.value);
-    console.log(text);
+    callbackFunction(event.target.value);
   };
 
+
+  console.log("Search");
   return(
     <div>
       <label htmlFor="search">Search</label>
       <input id="search" type="text" onChange={handleChange} />
+      <p>
+        Searching for <strong>{text}</strong>.
+      </p>
     </div>
   );
 }
