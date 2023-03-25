@@ -12,7 +12,7 @@ const style = {
 const App = () => {
   console.log("App");
 
-  const [text, setText] = React.useState("");
+  const [searchTerm, setSearchterm] = React.useState("");
 
   const stories = [
     {
@@ -41,20 +41,24 @@ const App = () => {
     },
   ]
 
+  const filterList = (s,st) => {
+    /**
+     * s := list of objects (stories)
+     * st := searchTerm
+     */
+    console.log("filterList");
+    // check if title inlcudes the searchterm
+    return (s.filter(s => s.title.toLowerCase().includes(st.trim().toLowerCase())));
+  }
+
   return (
     <div>
-      <Search callbackFunction = {setText} text={text}/>
+      <Search callbackFunction = {setSearchterm} text={searchTerm}/>
       <hr />
-      <List a={stories}/>
+      <List a={filterList(stories, searchTerm)}/>
     </div>
   );
 }
-
-const Title = ({title}) => {
-  return (
-    <h1>{title}</h1>
-  );
-};
 
 const List = (props) => {
   console.log("List");
@@ -70,6 +74,7 @@ const Search = ({callbackFunction, text}) => {
   const handleChange = event => {
     // A synthetic event
     callbackFunction(event.target.value);
+    
   };
 
 
