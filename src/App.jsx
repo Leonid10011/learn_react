@@ -48,6 +48,7 @@ const App = () => {
 
   return (
     <div>
+      <Welcome/>
       <div style={style} onClick={handelOuterClick}>
         <div style={style} onClick={handleInnerClick}>
           CLick Me ( Test Bubbeling)
@@ -60,6 +61,22 @@ const App = () => {
     </div>
   );
 }
+
+const Welcome = ({ title }) => {
+  title = title || "Earth";
+
+  return (
+    <div>
+      <Title title={`Welcome to ${title}`}/>
+    </div>
+  );
+};
+
+const Title = ({title}) => {
+  return (
+    <h1>{title}</h1>
+  );
+};
 
 const List = (props) => {
   return(
