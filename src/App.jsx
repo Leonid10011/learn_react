@@ -10,6 +10,7 @@ const style = {
 }
 
 const App = () => {
+  console.log("App");
   // Test Event Bubbeling
   const handelOuterClick = () => {
     alert("Outer Click");
@@ -64,7 +65,7 @@ const App = () => {
 
 const Welcome = ({ title }) => {
   title = title || "Earth";
-
+  
   return (
     <div>
       <Title title={`Welcome to ${title}`}/>
@@ -79,6 +80,7 @@ const Title = ({title}) => {
 };
 
 const List = (props) => {
+  console.log("List");
   return(
     <ul>
       {props.a.map(i => <Element key={i.objectID} item={i}/>)}
@@ -88,7 +90,7 @@ const List = (props) => {
 
 const Search = () => {
   const [text, setText] = React.useState("");
-
+  console.log("Search");
   const handleChange = event => {
     // A synthetic event
     console.log(event);
@@ -105,6 +107,7 @@ const Search = () => {
 }
 
 const Element = (props) => {
+  console.log("Element");
   return (
     <div>
       <li key={props.item.objectID}> 
