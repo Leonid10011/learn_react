@@ -64,13 +64,13 @@ const List = (props) => {
   console.log("List");
   return(
     <ul>
-      {props.a.map(i => <Element key={i.objectID} item={i}/>)}
+      {props.a.map(({objectID, ...item}) => <Element key={objectID} {...item}/>)}
     </ul>
   );
 }
 
 const Search = ({callbackFunction, text}) => {
-  
+
   const handleChange = event => {
     // A synthetic event
     callbackFunction(event.target.value);
@@ -90,17 +90,17 @@ const Search = ({callbackFunction, text}) => {
   );
 }
 
-const Element = (props) => {
+const Element = ({title, url, author, num_comments, points}) => {
   console.log("Element");
   return (
     <div>
-      <li key={props.item.objectID}> 
+      <li> 
       <span>
-        <a href={props.item.url}>{props.item.title}</a>
+        <a href={url}>{title}</a>
       </span>
-      <span> {props.item.author}</span>  
-      <span> {props.item.num_comments}</span>
-      <span> {props.item.points}</span>
+      <span> {author}</span>  
+      <span> {num_comments}</span>
+      <span> {points}</span>
       </li>
     </div>
   )
