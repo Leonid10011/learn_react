@@ -71,7 +71,9 @@ const App = () => {
 
   return (
     <div>
-      <InputWithLabel id="search" label="Search" callbackFunction = {setSearchterm} text={searchTerm}/>
+      <InputWithLabel id="search" callbackFunction = {setSearchterm} text={searchTerm}>
+        <strong>Search:</strong>
+      </InputWithLabel>
       <hr />
       <List a={filterList(stories, searchTerm)}/>
       <hr />
@@ -91,7 +93,7 @@ const List = (props) => {
   );
 }
 
-const InputWithLabel = ({id, type = "text", label, value, onInputChange}) => {
+const InputWithLabel = ({id, type = "text", value, onInputChange, children}) => {
 
   const handleChange = event => {
     // A synthetic event
@@ -100,7 +102,7 @@ const InputWithLabel = ({id, type = "text", label, value, onInputChange}) => {
 
   return(
     <>
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id}>{children}</label>
       &nbsp;
       <input id={id} type={type} onChange={handleChange} value={value}/>
     </>
