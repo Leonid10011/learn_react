@@ -88,13 +88,14 @@ const Search = ({callbackFunction, text}) => {
   };
 
   return(
-    <div>
+    // Or use <> </> shorthand
+    <React.Fragment>
       <label htmlFor="search">Search</label>
       <input id="search" type="text" onChange={handleChange} value={text}/>
       <p>
         Searching for <strong>{text}</strong>.
       </p>
-    </div>
+    </React.Fragment>
   );
 }
 
