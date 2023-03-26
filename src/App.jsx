@@ -10,9 +10,14 @@ const style = {
 }
 
 const App = () => {
-  console.log("App");
+  const [searchTerm, setSearchterm] = React.useState(
+    localStorage.getItem("search") || ""
+  );
 
-  const [searchTerm, setSearchterm] = React.useState("React");
+  //Evertime searchTerm changes, trigger the callback
+  React.useEffect(() => {
+    localStorage.setItem("search", searchTerm)
+  }, [searchTerm]);
 
   const stories = [
     {
@@ -46,7 +51,6 @@ const App = () => {
      * s := list of objects (stories)
      * st := searchTerm
      */
-    console.log("filterList");
     // check if title inlcudes the searchterm
     return (s.filter(s => s.title.toLowerCase().includes(st.trim().toLowerCase())));
   }
@@ -61,7 +65,6 @@ const App = () => {
 }
 
 const List = (props) => {
-  console.log("List");
   return(
     <ul>
       {props.a.map(({objectID, ...item}) => <Element key={objectID} {...item}/>)}
@@ -74,11 +77,8 @@ const Search = ({callbackFunction, text}) => {
   const handleChange = event => {
     // A synthetic event
     callbackFunction(event.target.value);
-    
   };
 
-
-  console.log("Search");
   return(
     <div>
       <label htmlFor="search">Search</label>
