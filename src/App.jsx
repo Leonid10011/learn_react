@@ -26,7 +26,9 @@ const useStorageState = (key, initialState) => {
 
 const App = () => {
   const [searchTerm, setSearchterm] = useStorageState("search", "React");
+  const [dropdown, setDropdown] = useState(true);
 
+  
   const stories = [
     {
       title: "React",
@@ -63,14 +65,23 @@ const App = () => {
     return (s.filter(s => s.title.toLowerCase().includes(st.trim().toLowerCase())));
   }
 
+  const onClick = () => {
+    console.log("CLICK");
+  }
+
   return (
     <div>
-      <Search callbackFunction = {setSearchterm} text={searchTerm}/>
+      <InputWithLabel id="search" label="Search" callbackFunction = {setSearchterm} text={searchTerm}/>
       <hr />
       <List a={filterList(stories, searchTerm)}/>
+      <hr />
+      <Button id="btn1" name="Click Me" handleClick={onClick}/>
+      <hr />
+      <Dropdown value={dropdown} onClick={setDropdown}/>
     </div>
   );
 }
+
 
 const List = (props) => {
   return(
@@ -80,22 +91,19 @@ const List = (props) => {
   );
 }
 
-const Search = ({callbackFunction, text}) => {
+const InputWithLabel = ({id, type = "text", label, value, onInputChange}) => {
 
   const handleChange = event => {
     // A synthetic event
-    callbackFunction(event.target.value);
+    onInputChange(event.target.value);
   };
 
   return(
-    // Or use <> </> shorthand
-    <React.Fragment>
-      <label htmlFor="search">Search</label>
-      <input id="search" type="text" onChange={handleChange} value={text}/>
-      <p>
-        Searching for <strong>{text}</strong>.
-      </p>
-    </React.Fragment>
+    <>
+      <label htmlFor={id}>{label}</label>
+      &nbsp;
+      <input id={id} type={type} onChange={handleChange} value={value}/>
+    </>
   );
 }
 
@@ -115,5 +123,53 @@ const Element = ({title, url, author, num_comments, points}) => {
   )
 }
 
+const Button = ({id, name, handleClick, ...rest}) => {
+  return(
+    <>
+      <button type="button" id={id} onClick={handleClick}>{name}</button>
+    </>
+  )
+}
+
+const RadioButton = ({label, value, onChange}) => {
+  return(
+    <>
+      <input type="radio" value={value} onChange={onChange} />
+      {label}
+    </>
+  );
+}
+
+const CheckButton = ({label, value, onChange}) => {
+  return(
+    <>
+      <input type="checkbox" value={value} onChange={onChange}/>
+      {label}
+    </>
+  );
+}
+
+const Dropdown = ({value, onClick}) => {
+  const handleClick = (event) => {
+    onClick(!value);
+  }
+
+  return(
+    <>
+    <button onClick={handleClick}>Dropdown</button>
+      {value ? (
+      <ul className="menu">
+        <li className="menu-item">
+          <button>Menu 1</button>
+        </li>
+        <li className="menu-item">
+          <button>Menu 2</button>
+        </li>
+      </ul>
+      ) : null}
+      {value ? <div>Is Open</div> : <div>Is Closed</div>}
+    </>
+  );
+}
 
 export default App
