@@ -9,15 +9,23 @@ const style = {
   border: "1px solid black",
 }
 
-const App = () => {
-  const [searchTerm, setSearchterm] = React.useState(
-    localStorage.getItem("search") || ""
+// Custom hook
+const useStorageState = (key, initialState) => {
+  const [value, setValue] = React.useState(
+    // ?? evaluates "" not to false
+    localStorage.getItem(key) ?? initialState
   );
 
   //Evertime searchTerm changes, trigger the callback
   React.useEffect(() => {
-    localStorage.setItem("search", searchTerm)
-  }, [searchTerm]);
+    localStorage.setItem(key, value)
+  }, [value, key]);
+
+  return [value, setValue];
+}
+
+const App = () => {
+  const [searchTerm, setSearchterm] = useStorageState("search", "React");
 
   const stories = [
     {
