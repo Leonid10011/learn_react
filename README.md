@@ -21,4 +21,6 @@ Css options in react: https://www.robinwieruch.de/react-css-styling/
 React Props: https://www.robinwieruch.de/react-pass-props-to-component/
 important: cannot lift states from child to parent. For this: pass stateSetFunction to child, which then is able to manipulate the state value and forces a rerender, while passing the new value down.
 
-React Hooks: https://www.robinwieruch.de/react-usestate-hook/
+React Hooks: https://www.robinwieruch.de/react-usestate-hook/#
+
+React Component Composition: https://www.robinwieruch.de/react-component-composition/

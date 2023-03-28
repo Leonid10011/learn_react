@@ -27,7 +27,6 @@ const useStorageState = (key, initialState) => {
 const App = () => {
   const [searchTerm, setSearchterm] = useStorageState("search", "React");
   const [dropdown, setDropdown] = useState(true);
-
   
   const stories = [
     {
@@ -71,7 +70,12 @@ const App = () => {
 
   return (
     <div>
-      <InputWithLabel id="search" callbackFunction = {setSearchterm} text={searchTerm}>
+      <InputWithLabel 
+        id="search" 
+        onInputChange = {setSearchterm} 
+        isFocused
+        text={searchTerm}
+      >
         <strong>Search:</strong>
       </InputWithLabel>
       <hr />
@@ -93,7 +97,22 @@ const List = (props) => {
   );
 }
 
-const InputWithLabel = ({id, type = "text", value, onInputChange, children}) => {
+const InputWithLabel = ({
+  id, 
+  type = "text", 
+  value, 
+  onInputChange, 
+  isFocused,
+  children,
+}) => {
+  const inputRef = React.useRef();
+
+  React.useEffect(() => {
+    if(isFocused && inputRef.current){
+      console.log("FOCUS");
+      inputRef.current.focus();
+    }
+  }, [isFocused]);
 
   const handleChange = event => {
     // A synthetic event
@@ -104,7 +123,12 @@ const InputWithLabel = ({id, type = "text", value, onInputChange, children}) => 
     <>
       <label htmlFor={id}>{children}</label>
       &nbsp;
-      <input id={id} type={type} onChange={handleChange} value={value}/>
+      <input  
+        ref={inputRef}
+        id={id} 
+        type={type} 
+        onChange={handleChange} 
+        value={value}/>
     </>
   );
 }
