@@ -12,7 +12,7 @@ const useStorageState = (key, initialState) => {
   const [value, setValue] = React.useState(
     // ?? evaluates "" not to false
     localStorage.getItem(key) ?? initialState
-  );
+  )
 
   //Evertime searchTerm changes, trigger the callback
   React.useEffect(() => {
@@ -24,9 +24,8 @@ const useStorageState = (key, initialState) => {
 
 const App = () => {
   const [searchTerm, setSearchterm] = useStorageState("search", "React");
-  const [dropdown, setDropdown] = useState(true);
-  
-  const stories = [
+  //const [dropdown, setDropdown] = useState(true);
+  const [stories, setStories] = React.useState([
     {
       title: "React",
       url: "https://reactjs.org",
@@ -51,7 +50,12 @@ const App = () => {
       points: 9,
       objectID: 2,
     },
-  ]
+  ])
+
+  const deleteStoryByKey = (key) => {
+    let newStories = stories.filter( story => story.objectID !== key);
+    setStories(newStories);
+  }
 
   const filterList = (s,st) => {
     /**
@@ -60,10 +64,6 @@ const App = () => {
      */
     // check if title inlcudes the searchterm
     return (s.filter(s => s.title.toLowerCase().includes(st.trim().toLowerCase())));
-  }
-
-  const onClick = () => {
-    console.log("CLICK");
   }
 
   return (
@@ -77,7 +77,7 @@ const App = () => {
         <strong>Search:</strong>
       </InputWithLabel>
       <hr />
-      <List a={filterList(stories, searchTerm)}/>
+      <List a={filterList(stories, searchTerm)} liftObjectID={deleteStoryByKey} />
       <hr />
     </div>
   );
@@ -85,9 +85,13 @@ const App = () => {
 
 
 const List = (props) => {
+  const handleListDelete = (key) => {
+    props.liftObjectID(key);
+  }
+
   return(
     <ul>
-      {props.a.map(({objectID, ...item}) => <Element key={objectID} {...item}/>)}
+      {props.a.map(({objectID, ...item}) => <Element key={objectID} dataKey={objectID} onDelete={handleListDelete} {...item}/>)}
     </ul>
   );
 }
@@ -128,17 +132,29 @@ const InputWithLabel = ({
   );
 }
 
-const Element = ({title, url, author, num_comments, points}) => {
-  console.log("Element");
+const Element = ({dataKey, onDelete, title, url, author, num_comments, points}) => {
+  
+  const onClick = () => {
+    onDelete(dataKey);
+  }
+
   return (
     <div>
-      <li> 
+      <li style={{border: "3px solid black", borderRadius: "2px", margin: "5px", padding: "2px"}}> 
       <span>
         <a href={url}>{title}</a>
       </span>
       <span> {author}</span>  
       <span> {num_comments}</span>
       <span> {points}</span>
+      <span>
+        <button 
+          style={{background: "red", margin: "0px 5px"}}
+          onClick={onClick}
+          >
+            Delete
+        </button>
+      </span>
       </li>
     </div>
   )
