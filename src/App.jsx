@@ -150,7 +150,7 @@ const Element = ({dataKey, onDelete, title, url, author, num_comments, points}) 
       <span>
         <button 
           style={{background: "red", margin: "0px 5px"}}
-          onClick={onClick}
+          onClick={onDelete.bind(null, dataKey)}
           >
             Delete
         </button>
