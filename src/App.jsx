@@ -1,11 +1,5 @@
 import React from "react";
-import { useState } from 'react'
 import './App.css'
-
-const style = {
-  padding: "10px 30px",
-  border: "1px solid black",
-}
 
 // Custom hook
 const useStorageState = (key, initialState) => {
@@ -25,7 +19,8 @@ const useStorageState = (key, initialState) => {
 const App = () => {
   const [searchTerm, setSearchterm] = useStorageState("search", "React");
   //const [dropdown, setDropdown] = useState(true);
-  const [stories, setStories] = React.useState([
+
+  const initialStories = [
     {
       title: "React",
       url: "https://reactjs.org",
@@ -50,7 +45,25 @@ const App = () => {
       points: 9,
       objectID: 2,
     },
-  ])
+  ];
+
+  React.useEffect(() => {
+    getAsyncStories().then(result => {
+      setStories(result.data.stories);
+    })
+  }, []);
+
+  const [stories, setStories] = React.useState([]);
+
+  // async function to get stories
+  const getAsyncStories = () =>  
+    new Promise(resolve => 
+      setTimeout(
+        () => resolve({data: {stories: initialStories}}),
+        2000
+      )
+    );
+  
 
   const deleteStoryByKey = (key) => {
     let newStories = stories.filter( story => story.objectID !== key);
@@ -133,10 +146,6 @@ const InputWithLabel = ({
 }
 
 const Element = ({dataKey, onDelete, title, url, author, num_comments, points}) => {
-  
-  const onClick = () => {
-    onDelete(dataKey);
-  }
 
   return (
     <div>
