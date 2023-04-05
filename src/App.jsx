@@ -18,6 +18,8 @@ const useStorageState = (key, initialState) => {
 
 const App = () => {
   const [searchTerm, setSearchterm] = useStorageState("search", "React");
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
   //const [dropdown, setDropdown] = useState(true);
 
   const initialStories = [
@@ -48,9 +50,15 @@ const App = () => {
   ];
 
   React.useEffect(() => {
-    getAsyncStories().then(result => {
-      setStories(result.data.stories);
-    })
+    setIsLoading(true);
+    getAsyncStories()
+      .then(result => {
+        setStories(result.data.stories);
+        setIsLoading(false)
+      })
+      .catch(error => {
+        setIsError(true);   
+      })
   }, []);
 
   const [stories, setStories] = React.useState([]);
@@ -90,7 +98,15 @@ const App = () => {
         <strong>Search:</strong>
       </InputWithLabel>
       <hr />
-      <List a={filterList(stories, searchTerm)} liftObjectID={deleteStoryByKey} />
+      { isError && <p> Something went wrong ... </p>}
+      {isLoading ? (
+        <p>Loading ...</p>
+      ) : 
+      <List 
+        a={filterList(stories, searchTerm)} 
+        liftObjectID={deleteStoryByKey}
+        />
+      }
       <hr />
     </div>
   );
