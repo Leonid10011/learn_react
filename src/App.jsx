@@ -1,6 +1,9 @@
 import React from "react";
 import './App.css'
 
+
+const setStories_ = "SET_STORIES";
+const removeStory_ = "REMOVE_STORY"
 // Custom hook
 const useStorageState = (key, initialState) => {
   const [value, setValue] = React.useState(
@@ -21,7 +24,7 @@ const App = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
   //const [dropdown, setDropdown] = useState(true);
-
+  
   const initialStories = [
     {
       title: "React",
@@ -48,12 +51,45 @@ const App = () => {
       objectID: 2,
     },
   ];
+  
+  
+  
+  // async function to get stories
+  const getAsyncStories = () =>  
+  new Promise(resolve => 
+    setTimeout(
+      () => resolve({data: {stories: initialStories}}),
+      2000
+      )
+    );
+  
+    
+  const storiesReducer = (state, action) => {
+    switch(action.type){
+      case setStories_:
+        return action.payload;
+      case removeStory_:
+        return state.filter(
+          (story) => story.objectID !== action.payload
+        );
+      default:
+        throw new Error();
+    }
+  };
 
+  const [stories, dispatchStories] = React.useReducer(
+    storiesReducer,
+    []
+  );  
+  
   React.useEffect(() => {
     setIsLoading(true);
     getAsyncStories()
       .then(result => {
-        setStories(result.data.stories);
+        dispatchStories({
+          type: setStories_,
+          payload: result.data.stories,
+        });
         setIsLoading(false)
       })
       .catch(error => {
@@ -61,22 +97,12 @@ const App = () => {
       })
   }, []);
 
-  const [stories, setStories] = React.useState([]);
-
-  // async function to get stories
-  const getAsyncStories = () =>  
-    new Promise(resolve => 
-      setTimeout(
-        () => resolve({data: {stories: initialStories}}),
-        2000
-      )
-    );
-  
-
   const deleteStoryByKey = (key) => {
-    let newStories = stories.filter( story => story.objectID !== key);
-    setStories(newStories);
-  }
+    dispatchStories({
+      type: removeStory_,
+      payload: key,
+    });
+  };
 
   const filterList = (s,st) => {
     /**
