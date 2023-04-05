@@ -21,8 +21,7 @@ const useStorageState = (key, initialState) => {
 
 const App = () => {
   const [searchTerm, setSearchterm] = useStorageState("search", "React");
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [isError, setIsError] = React.useState(false);
+  
   //const [dropdown, setDropdown] = useState(true);
   
   const initialStories = [
@@ -66,12 +65,32 @@ const App = () => {
     
   const storiesReducer = (state, action) => {
     switch(action.type){
-      case setStories_:
-        return action.payload;
-      case removeStory_:
-        return state.filter(
-          (story) => story.objectID !== action.payload
-        );
+      case "REMOVE_STORY":
+        return {
+          ...state,
+          data: state.data.filter(
+            (story) => story.objectID !== action.payload
+          ),
+          }
+      case "STORIES_FETCH_INIT":
+          return {
+            ...state,
+            isLoading:true,
+            isError:false,
+          };
+      case "STORIES_FETCH_SUCCESS":
+        return {
+          ...state,
+          isLoading: false,
+          isError: false,
+          data: action.payload,
+        };
+      case "STORIES_FETCH_FAILURE":
+        return {
+          ...state,
+          isLoading: false,
+          isError: true,
+        };
       default:
         throw new Error();
     }
@@ -79,21 +98,20 @@ const App = () => {
 
   const [stories, dispatchStories] = React.useReducer(
     storiesReducer,
-    []
+    {data: [], isLoading: false, isError: false}
   );  
-  
+
   React.useEffect(() => {
-    setIsLoading(true);
+    dispatchStories({type: "STORIES_FETCH_INIT"})
     getAsyncStories()
       .then(result => {
         dispatchStories({
-          type: setStories_,
+          type: "STORIES_FETCH_SUCCESS",
           payload: result.data.stories,
         });
-        setIsLoading(false)
       })
       .catch(error => {
-        setIsError(true);   
+        dispatchStories({type: "STORIES_FETCH_FAILURE"});
       })
   }, []);
 
@@ -110,7 +128,7 @@ const App = () => {
      * st := searchTerm
      */
     // check if title inlcudes the searchterm
-    return (s.filter(s => s.title.toLowerCase().includes(st.trim().toLowerCase())));
+    return (s.data.filter(s => s.title.toLowerCase().includes(st.trim().toLowerCase())));
   }
 
   return (
@@ -124,8 +142,8 @@ const App = () => {
         <strong>Search:</strong>
       </InputWithLabel>
       <hr />
-      { isError && <p> Something went wrong ... </p>}
-      {isLoading ? (
+      { stories.isError && <p> Something went wrong ... </p>}
+      {stories.isLoading ? (
         <p>Loading ...</p>
       ) : 
       <List 
