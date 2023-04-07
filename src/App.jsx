@@ -1,6 +1,7 @@
 import React from "react";
 import './App.css'
 
+const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query="
 
 const setStories_ = "SET_STORIES";
 const removeStory_ = "REMOVE_STORY"
@@ -21,48 +22,21 @@ const useStorageState = (key, initialState) => {
 
 const App = () => {
   const [searchTerm, setSearchterm] = useStorageState("search", "React");
-  
-  //const [dropdown, setDropdown] = useState(true);
-  
-  const initialStories = [
-    {
-      title: "React",
-      url: "https://reactjs.org",
-      author: "Jordan Walke",
-      num_comments: 3,
-      points: 4,
-      objectID: 0,
-    },
-    {
-      title: "Redux",
-      url: "https://redux.js.org/",
-      author: "Dan Abramov, Andrew Clark",
-      num_comments: 2,
-      points: 5,
-      objectID: 1,
-    },
-    {
-      title: "Java",
-      url: "www.oracle.com/java",
-      author: "James Gosling",
-      num_comments: 4,
-      points: 9,
-      objectID: 2,
-    },
-  ];
-  
-  
-  
-  // async function to get stories
-  const getAsyncStories = () =>  
-  new Promise(resolve => 
-    setTimeout(
-      () => resolve({data: {stories: initialStories}}),
-      2000
-      )
-    );
-  
-    
+   
+  const getHackerStories = async (searchTerm) => {
+    window.fetch(`${API_ENDPOINT}${searchTerm}`)
+      .then(response => response.json())
+      .then(result => {
+        dispatchStories({
+          type: "STORIES_FETCH_SUCCESS",
+          payload: result.hits,
+        });
+      })
+      .catch(error => {
+        dispatchStories({type: "STORIES_FETCH_FAILURE"});
+      });
+  }
+
   const storiesReducer = (state, action) => {
     switch(action.type){
       case "REMOVE_STORY":
@@ -101,19 +75,13 @@ const App = () => {
     {data: [], isLoading: false, isError: false}
   );  
 
+
   React.useEffect(() => {
-    dispatchStories({type: "STORIES_FETCH_INIT"})
-    getAsyncStories()
-      .then(result => {
-        dispatchStories({
-          type: "STORIES_FETCH_SUCCESS",
-          payload: result.data.stories,
-        });
-      })
-      .catch(error => {
-        dispatchStories({type: "STORIES_FETCH_FAILURE"});
-      })
-  }, []);
+    dispatchStories({type: "STORIES_FETCH_INIT"});
+    if(searchTerm !== "")
+      getHackerStories(searchTerm);
+
+  }, [searchTerm]);
 
   const deleteStoryByKey = (key) => {
     dispatchStories({
@@ -121,15 +89,6 @@ const App = () => {
       payload: key,
     });
   };
-
-  const filterList = (s,st) => {
-    /**
-     * s := list of objects (stories)
-     * st := searchTerm
-     */
-    // check if title inlcudes the searchterm
-    return (s.data.filter(s => s.title.toLowerCase().includes(st.trim().toLowerCase())));
-  }
 
   return (
     <div>
@@ -147,7 +106,7 @@ const App = () => {
         <p>Loading ...</p>
       ) : 
       <List 
-        a={filterList(stories, searchTerm)} 
+        a={stories.data} 
         liftObjectID={deleteStoryByKey}
         />
       }
