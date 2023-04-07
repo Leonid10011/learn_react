@@ -23,7 +23,10 @@ const useStorageState = (key, initialState) => {
 const App = () => {
   const [searchTerm, setSearchterm] = useStorageState("search", "React");
    
-  const getHackerStories = async (searchTerm) => {
+  const getHackerStories = React.useCallback(() => {
+    dispatchStories({type: "STORIES_FETCH_INIT"});
+    if(searchTerm === "") return;
+
     window.fetch(`${API_ENDPOINT}${searchTerm}`)
       .then(response => response.json())
       .then(result => {
@@ -32,10 +35,10 @@ const App = () => {
           payload: result.hits,
         });
       })
-      .catch(error => {
+      .catch(() => {
         dispatchStories({type: "STORIES_FETCH_FAILURE"});
       });
-  }
+  }, [searchTerm]);
 
   const storiesReducer = (state, action) => {
     switch(action.type){
@@ -77,11 +80,8 @@ const App = () => {
 
 
   React.useEffect(() => {
-    dispatchStories({type: "STORIES_FETCH_INIT"});
-    if(searchTerm !== "")
-      getHackerStories(searchTerm);
-
-  }, [searchTerm]);
+    getHackerStories();
+  }, [getHackerStories]);
 
   const deleteStoryByKey = (key) => {
     dispatchStories({
