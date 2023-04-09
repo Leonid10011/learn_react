@@ -96,45 +96,61 @@ const App = () => {
     setSearchterm(event.target.value);
   }
 
-  const handelSubmitTerm = () => {
-    setUrl(`${API_ENDPOINT}${searchTerm}`)
+  const handleSearchSubmit = (event) => {
+    setUrl(`${API_ENDPOINT}${searchTerm}`);
+    event.preventDefault();
   }
 
   return (
     <div>
       <h1>My Hacker Stories</h1>
-
-      <InputWithLabel 
-        id="search" 
-        onInputChange = {handleSearchInput} 
-        isFocused
-        value={searchTerm}
-      >
-        <strong>Search:</strong>
-      </InputWithLabel>
-      <button 
-        type="button"
-        style={{background: "green", margin: "0px 5px"}} 
-        disabled={!searchTerm} 
-        onClick={handelSubmitTerm}
-      >
-        Search
-      </button>
+      <SearchForm  
+        searchTerm={searchTerm}
+        handleSearchInput={handleSearchInput}
+        handleSearchSubmit={handleSearchSubmit}
+      />
       <hr />
-      { stories.isError && <p> Something went wrong ... </p>}
-      {stories.isLoading ? (
-        <p>Loading ...</p>
-      ) : 
-      <List 
-        list={stories.data} 
-        onRemoveItem={handleRemoveStory}
-        />
-      }
-      <hr />
-    </div>
+        { stories.isError && <p> Something went wrong ... </p>}
+        {stories.isLoading ? (
+          <p>Loading ...</p>
+          ) : 
+          <List 
+          list={stories.data} 
+          onRemoveItem={handleRemoveStory}
+          />
+        }
+      </div>
   );
 }
 
+
+const SearchForm = ({
+  searchTerm,
+  handleSearchSubmit,
+  handleSearchInput
+}) => {
+    return(
+      <>
+        <form onSubmit={handleSearchSubmit}>
+          <InputWithLabel 
+            id="search" 
+            onInputChange = {handleSearchInput} 
+            isFocused
+            value={searchTerm}
+            >
+            <strong>Search:</strong>
+          </InputWithLabel>
+          <button 
+            type="submit"
+            style={{background: "green", margin: "0px 5px"}} 
+            disabled={!searchTerm} 
+          >
+            Search
+          </button>
+        </form>
+      </>
+    );
+};
 
 const List = ({list, onRemoveItem}) => {
 
