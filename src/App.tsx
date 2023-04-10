@@ -4,13 +4,56 @@ import './App.css'
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query="
 
-const storiesReducer = (state, action) => {
-  switch(action.type){
+type Story = {
+  objectID: string;
+  url: string;
+  title: string;
+  author: string;
+  num_comments: number;
+  points: number;
+};
+
+type StoriesState = {
+  data: Stories,
+  isLoading: Boolean,
+  isError: Boolean,
+}
+
+type StoriesFetchInitAction = {
+  type: "STORIES_FETCH_INIT",
+}
+
+type StoriesFetchSuccessAction = {
+  type :"STORIES_FETCH_SUCCESS";
+  payload: Stories;
+}
+
+type StoriesFetchFailureAction = {
+  type: "STORIES_FETCH_FAILURE";
+}
+
+type StoriesRemoveStoryAction = {
+  type: "REMOVE_STORY";
+  payload: Story;
+}
+
+type StoriesAction = 
+  StoriesFetchInitAction  
+  | StoriesFetchSuccessAction 
+  | StoriesFetchFailureAction 
+  | StoriesRemoveStoryAction;
+
+type ElementProps = {
+  item: Story,
+  onRemoveItem: (item: Story) => void,
+}
+const storiesReducer = (state: StoriesState, action: StoriesAction) => {
+  switch(action.type){ 
     case "REMOVE_STORY":
       return {
         ...state,
         data: state.data.filter(
-          (story) => story.objectID !== action.payload.objectID
+          (story: Story) => story.objectID !== action.payload.objectID
         ),
         }
     case "STORIES_FETCH_INIT":
@@ -37,7 +80,10 @@ const storiesReducer = (state, action) => {
   }
 };
 
-const useStorageState = (key, initialState) => {
+const useStorageState = (
+  key: string, 
+  initialState: string
+  ): [string, (newValue: string) => void] => {
   const [value, setValue] = React.useState(
     // ?? evaluates "" not to false
     localStorage.getItem(key) ?? initialState
@@ -85,18 +131,18 @@ const App = () => {
     getHackerStories();
   }, [getHackerStories]);
 
-  const handleRemoveStory = (item) => {
+  const handleRemoveStory = (item: Story) => {
     dispatchStories({
       type: "REMOVE_STORY",
       payload: item,
     });
   };
   
-  const handleSearchInput = event => {
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchterm(event.target.value);
   }
 
-  const handleSearchSubmit = (event) => {
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     setUrl(`${API_ENDPOINT}${searchTerm}`);
     event.preventDefault();
   }
@@ -123,8 +169,13 @@ const App = () => {
   );
 }
 
+type SearchFormProps = {
+  searchTerm: string,
+  handleSearchSubmit: (event: React.FormEvent<HTMLFormElement>) => void,
+  handleSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void,
+}
 
-const SearchForm = ({
+const SearchForm: React.FC<SearchFormProps> = ({
   searchTerm,
   handleSearchSubmit,
   handleSearchInput
@@ -152,7 +203,14 @@ const SearchForm = ({
     );
 };
 
-const List = ({list, onRemoveItem}) => {
+type Stories = Story[];
+
+type ListProps = {
+  list: Stories,
+  onRemoveItem: (item: Story) => void,
+}
+
+const List: React.FC<ListProps> = ({list, onRemoveItem}) => {
 
   return(
     <ul>
@@ -167,7 +225,16 @@ const List = ({list, onRemoveItem}) => {
   );
 }
 
-const InputWithLabel = ({
+type InputWithLabelProps = {
+  id: string,
+  type?: string,
+  value: string,
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+  isFocused?: Boolean,
+  children: React.ReactNode,
+}
+
+const InputWithLabel: React.FC<InputWithLabelProps> = ({
   id, 
   type = "text", 
   value, 
@@ -175,7 +242,7 @@ const InputWithLabel = ({
   isFocused,
   children,
 }) => {
-  const inputRef = React.useRef();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
     if(isFocused && inputRef.current){
@@ -197,8 +264,7 @@ const InputWithLabel = ({
   );
 }
 
-const Element = ({item, onRemoveItem}) => {
-
+const Element: React.FC<ElementProps> = ({item, onRemoveItem}) => {
   return (
     <div>
       <li style={{border: "3px solid black", borderRadius: "2px", margin: "5px", padding: "2px"}}> 

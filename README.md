@@ -6,6 +6,8 @@ Important Lesson:
 
 Popular libraries: https://www.robinwieruch.de/react-libraries/
 
+Typescript CheatSheet: https://github.com/typescript-cheatsheets/react#reacttypescript-cheatsheets
+
 How Components work: https://www.robinwieruch.de/react-element-component/
 
 Rendering Elements: https://bit.ly/3aUySgP
